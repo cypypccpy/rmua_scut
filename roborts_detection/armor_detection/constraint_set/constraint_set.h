@@ -146,7 +146,7 @@ class ConstraintSet : public ArmorDetectionBase {
    * @param translation Translation information of the armor relative to the camera.
    * @param rotation Rotation information of the armor relative to the camera.
    */
-  ErrorInfo DetectArmor(bool &detected, cv::Point3f &target_3d) override;
+  ErrorInfo DetectArmor(bool &detected, cv::Point3f &target_3d, cv::Mat &rvec, cv::Mat &tvec) override;
   /**
    * @brief Detecting lights on the armors.
    * @param src Input image
@@ -182,7 +182,7 @@ class ConstraintSet : public ArmorDetectionBase {
    * @param yaw
    * @param bullet_speed
    */
-  void CalcControlInfo(const ArmorInfo & armor, cv::Point3f &target_3d);
+  void CalcControlInfo(const ArmorInfo & armor, cv::Point3f &target_3d, cv::Mat &rvec_, cv::Mat &tvec_);
   void CalcControlInfoCorrect(const ArmorInfo & armor, std::vector<cv::Point2f> &armor_points_c);
   void CalcControlInfoTracking(std::vector<cv::Point2f> &tracking_armor_point, cv::Point3f &target_3d);
 

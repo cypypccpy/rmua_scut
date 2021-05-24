@@ -67,6 +67,7 @@ class Chassis: public Module{
    * @param vel Chassis speed control data
    */
   void ChassisSpeedCtrlCallback(const geometry_msgs::Twist::ConstPtr &vel);
+  void RefereeCB(const roborts_msgs::GameStatus::ConstPtr &status);
 
   /**
    * @brief Chassis speed and acceleration control callback in ROS
@@ -94,12 +95,14 @@ class Chassis: public Module{
   ros::Subscriber ros_sub_cmd_chassis_vel_;
   //! ros subscriber for chassis speed and acceleration control
   ros::Subscriber ros_sub_cmd_chassis_vel_acc_;
+  ros::Subscriber ref_sub_;
   //! ros publisher for odometry information
   ros::Publisher ros_odom_pub_;
   //! ros publisher for uwb information
   ros::Publisher ros_uwb_pub_;
 
-
+  roborts_msgs::GameStatus status_;
+  bool begin_;
   //! ros chassis odometry tf
   geometry_msgs::TransformStamped odom_tf_;
   //! ros chassis odometry tf broadcaster

@@ -80,6 +80,7 @@ void Gimbal::ROS_Init(){
   ros_sub_cmd_gimbal_angle_ = ros_nh_.subscribe("cmd_gimbal_angle", 1, &Gimbal::GimbalAngleCtrlCallback, this);
   //ros publisher
   gimbal_info_pub_ = ros_nh_.advertise<roborts_msgs::GimbalInfo>("cmd_gimbal_info", 100);
+  ref_sub_ = ros_nh_.subscribe<roborts_msgs::GameStatus>("/game_status", 1, &Gimbal::RefereeCB, this);
 
   //ros service
   ros_ctrl_fric_wheel_srv_ = ros_nh_.advertiseService("cmd_fric_wheel", &Gimbal::CtrlFricWheelService, this);
@@ -88,6 +89,13 @@ void Gimbal::ROS_Init(){
   gimbal_tf_.header.frame_id = "base_link";
   gimbal_tf_.child_frame_id = "gimbal";
 
+}
+
+void Gimbal::RefereeCB(const roborts_msgs::GameStatus::ConstPtr &status) {
+  status_ = *status;
+  if (status_.game_status == 4) {
+    begin_ = true;
+  }
 }
 
 void Gimbal::GimbalInfoCallback(const std::shared_ptr<roborts_sdk::cmd_gimbal_info> gimbal_info){
@@ -130,13 +138,15 @@ bool Gimbal::CtrlFricWheelService(roborts_msgs::FricWhl::Request &req,
                                   roborts_msgs::FricWhl::Response &res){
   roborts_sdk::cmd_fric_wheel_speed fric_speed;
   if(req.open){
-    fric_speed.left = 1240;
-    fric_speed.right = 1240;
+    fric_speed.left = 1250;
+    fric_speed.right = 1250;
   } else{
     fric_speed.left = 1000;
     fric_speed.right = 1000;
   }
-  fric_wheel_pub_->Publish(fric_speed);
+  if (begin_)
+    fric_wheel_pub_->Publish(fric_speed);
+
   res.received = true;
   return true;
 }
@@ -170,7 +180,8 @@ bool Gimbal::CtrlShootService(roborts_msgs::ShootCmd::Request &req,
     default:
       return  false;
   }
-  gimbal_shoot_pub_->Publish(gimbal_shoot);
+  if (begin_)
+    gimbal_shoot_pub_->Publish(gimbal_shoot);
 
   res.received = true;
   return true;

@@ -116,6 +116,7 @@ class CostmapInterface {
    * @breif Reset costmap with every layer reset.
    */
   void ResetLayers();
+  void ResetCostmap();
   /**
    * @brief Tell whether the costmap is updated.
    * @return True if every layer is current.

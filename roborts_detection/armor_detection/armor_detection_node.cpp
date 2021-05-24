@@ -160,13 +160,16 @@ void ArmorDetectionNode::ExecuteLoop() {
   int mode = 0;
   int delay = 0;
   float last_position_ = 0;
-  fric_wheel_.request.open=0;
+  cv::Mat rvec;
+  cv::Mat tvec;
+  //fric_wheel_.request.open=1;
+  //fric_client_.call(fric_wheel_);
   
   while(running_) {
     usleep(1);
     if (node_state_ == NodeState::RUNNING) {
       cv::Point3f target_3d;
-      ErrorInfo error_info = armor_detector_->DetectArmor(detected_enemy_, target_3d);
+      ErrorInfo error_info = armor_detector_->DetectArmor(detected_enemy_, target_3d, rvec, tvec);
       {
         std::lock_guard<std::mutex> guard(mutex_);
         x_ = target_3d.x;
@@ -193,8 +196,6 @@ void ArmorDetectionNode::ExecuteLoop() {
         shoot_cmd_.request.number=1;
         shoot_cmd_.request.shoot_freq=10;
         
-        fric_wheel_.request.open=1;
-        //fric_client_.call(fric_wheel_);
         //shoot_client_.call(shoot_cmd_);
 
         std::lock_guard<std::mutex> guard(mutex_);
@@ -212,7 +213,7 @@ void ArmorDetectionNode::ExecuteLoop() {
         undetected_count_--;
         PublishMsgs();
         /*
-        if(undetected_count_ == 0) {
+        if(undetected_count_ != 0) {
           fric_wheel_.request.open=0;
           fric_client_.call(fric_wheel_);
         }

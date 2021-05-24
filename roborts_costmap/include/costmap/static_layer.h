@@ -52,7 +52,9 @@
 #ifndef ROBORTS_COSTMAP_STATIC_LAYER_H
 #define ROBORTS_COSTMAP_STATIC_LAYER_H
 
+#include <roborts_msgs/GameZoneArray.h>
 #include <nav_msgs/OccupancyGrid.h>
+#include <map_msgs/OccupancyGridUpdate.h>
 #include "io/io.h"
 #include "map_common.h"
 #include "costmap_layer.h"
@@ -73,23 +75,28 @@ class StaticLayer : public CostmapLayer {
                             double* max_x, double* max_y);
   virtual void MatchSize();
 
- private:
+private:
   void InComingMap(const nav_msgs::OccupancyGridConstPtr& new_map);
-//  void IncomingUpdate(const map_msgs::OccupancyGridUpdateConstPtr& update);
+  void RefereeCB(const roborts_msgs::GameZoneArray::ConstPtr &zone);
+  void IncomingUpdate(const map_msgs::OccupancyGridUpdateConstPtr& update);
   unsigned char InterpretValue(unsigned char value);
   std::string global_frame_;
   std::string map_frame_;
   std::string map_topic_;
   bool subscribe_to_updates_;
   bool map_received_;
+  bool map_update_;
+  bool map_reset_ = false;
   bool has_updated_data_;
+  roborts_msgs::GameZoneArray zone_;
   unsigned int staic_layer_x_, staic_layer_y_, width_, height_;
   unsigned char lethal_threshold_, unknown_cost_value_;
+  unsigned int prohibition_[6];
   bool track_unknown_space_;
   bool use_maximum_;
   bool first_map_only_;
   bool trinary_costmap_;
-  ros::Subscriber map_sub_, map_update_sub_;
+  ros::Subscriber map_sub_, map_update_sub_, ref_sub_;
 };
 
 

@@ -32,10 +32,12 @@ class VelConverter {
     cmd_vel_.angular.z = 0;
 
     vel_pub_ = cmd_handle_.advertise<roborts_msgs::TwistAccel>("/cmd_vel_acc", 5);
-    vel_sub_ = cmd_handle_.subscribe<roborts_msgs::GlobalPlannerActionFeedback>("/global_planner_node_action/feedback", 5, &VelConverter::feedbackCB, this);
+    vel_sub_ = cmd_handle_.subscribe<roborts_msgs::GlobalPlannerActionGoal>("/global_planner_node_action/goal", 5, &VelConverter::goalCB, this);
+    result_sub_ = cmd_handle_.subscribe<roborts_msgs::GlobalPlannerActionResult>("/global_planner_node_action/result", 5, &VelConverter::resultCB, this);
     
   }
-  void feedbackCB(const roborts_msgs::GlobalPlannerActionFeedback::ConstPtr& goal);
+  void goalCB(const roborts_msgs::GlobalPlannerActionGoal::ConstPtr& goal);
+  void resultCB(const roborts_msgs::GlobalPlannerActionResult::ConstPtr& result);
   void UpdateVel();
 
  private:
@@ -49,17 +51,27 @@ class VelConverter {
   ros::NodeHandle cmd_handle_;
   ros::Publisher vel_pub_;
   ros::Subscriber vel_sub_;
+  ros::Subscriber result_sub_;
   std::chrono::high_resolution_clock::time_point time_begin_;
 
   std::mutex cmd_mutex_;
 };
 
-void VelConverter::feedbackCB(const roborts_msgs::GlobalPlannerActionFeedback::ConstPtr& goal)
+void VelConverter::goalCB(const roborts_msgs::GlobalPlannerActionGoal::ConstPtr& goal)
 {
   if (!begin_) {
     begin_ = true;
   }
-  ROS_INFO("feedback!");
+  ROS_INFO("goal!");
+}
+
+void VelConverter::resultCB(const roborts_msgs::GlobalPlannerActionResult::ConstPtr& result)
+{
+  if (begin_) {
+    begin_ = false;
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+  }
+  ROS_INFO("result!");
 }
 
 void VelConverter::UpdateVel() {
@@ -76,15 +88,12 @@ void VelConverter::UpdateVel() {
     cmd_vel_acc_.accel.linear.y = 0;
     cmd_vel_acc_.accel.angular.z = 0;
 
-    //vel_pub_.publish(cmd_vel_acc_);
+    vel_pub_.publish(cmd_vel_acc_);
     delay += 1;
     if(delay == 150) {
       mode = mode == 0 ? 1 : 0;
       delay = 0;
     }    
-  }
-  else {
-    begin_ = false;
   }
 }
 

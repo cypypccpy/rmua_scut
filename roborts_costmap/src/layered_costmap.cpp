@@ -56,6 +56,7 @@ namespace roborts_costmap {
 CostmapLayers::CostmapLayers(std::string global_frame, bool rolling_window, bool track_unknown) : costmap_(), \
                              global_frame_id_(global_frame), is_rolling_window_(rolling_window), is_initialized_(false), \
                              is_size_locked_(false), file_path_("") {
+
   if (track_unknown) {
     costmap_.SetDefaultValue(255);
   } else {

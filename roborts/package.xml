@@ -20,6 +20,7 @@
     <run_depend>roborts_msgs</run_depend>
     <run_depend>roborts_planning</run_depend>
     <run_depend>roborts_tracking</run_depend>
+    <run_depend>rmua_decision</run_depend>
 
     <export>
         <metapackage/>

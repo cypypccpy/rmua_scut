@@ -61,18 +61,6 @@ float GimbalContrl::GetPitch(float x, float y, float v) {
   return a;
 }
 
-float GimbalContrl::GyroOptimizer(float angle_) {
-    if (angle_ > 0) {
-        return 160. * sqrtf(angle_) /
-               (1 + powf(e, -0.3 * (angle_ - 25.)));
-    }
-    else {
-        angle_ = -angle_;
-        return -160. * sqrtf(angle_) /
-               (1 + powf(e, -0.3 * (angle_ - 25.)));
-    }
-}
-
 void GimbalContrl::Transform(cv::Point3f &postion, float &pitch, float &yaw) {
   pitch =
       -GetPitch((postion.z + offset_.z) / 1000, -(postion.y + offset_.y) / 1000, init_v_) + (float)(offset_pitch_ * 3.1415926535 / 180);
@@ -89,19 +77,17 @@ void GimbalContrl::Predict(float &pitch_rate, float &yaw_rate, float &pitch, flo
 
   gyro_speed.x = yaw_rate;
   gyro_speed.y = pitch_rate;
-  pic_speed.x = (yaw - last_center.x) / actual_time * 0.1;
-  pic_speed.y = (pitch - last_center.y) / actual_time * 0.1;
-  actual_speed = pic_speed - gyro_speed * 0.02;
-  std::cout << "actual_speed.x: " << actual_speed.x << std::endl;
-  std::cout << "actual_speed.y:" << actual_speed.y << std::endl;
-  std::cout << "actual_time:" << actual_time << std::endl;
+  pic_speed.x = (yaw - last_center.x) / actual_time * 0.3;
+  pic_speed.y = (pitch - last_center.y) / actual_time * 0.3;
+  actual_speed = pic_speed - gyro_speed * 0.025;
 
-  if (actual_speed.x < 5) {
+  if (actual_speed.x < 1) {
     actual_speed.x = 0;
   }
-  if (actual_speed.y < 5) {
+  if (actual_speed.y < 1) {
     actual_speed.y = 0;
   }
+
   last_center.x = yaw;
   last_center.y = pitch;
 

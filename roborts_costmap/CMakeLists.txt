@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   laser_geometry
   sensor_msgs
   geometry_msgs
+  roborts_msgs
   )
 
 find_package(PCL 1.7 REQUIRED)

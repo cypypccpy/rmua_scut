@@ -165,9 +165,9 @@ class CostmapLayers {
   }
 
  private:
+  Costmap2D costmap_;
   std::string global_frame_id_, file_path_;
   std::vector<geometry_msgs::Point> footprint_;
-  Costmap2D costmap_;
   bool is_rolling_window_, is_size_locked_, is_initialized_, is_current_;
   double  minx_, miny_, maxx_, maxy_, circumscribed_radius_, inscribed_radius_;
   unsigned int bx0_, bxn_, by0_, byn_;

@@ -276,10 +276,12 @@ void ObstacleLayer::Deactivate() {
 }
 
 void ObstacleLayer::Reset() {
+  /*
   Deactivate();
   ResetMaps();
   is_current_ = true;
   Activate();
+  */
 }
 
 bool ObstacleLayer::GetMarkingObservations(std::vector<Observation> &marking_observations) const {

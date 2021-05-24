@@ -37,7 +37,7 @@
 #include "costmap/costmap_interface.h"
 #include "roborts_msgs/LocalPlannerAction.h"
 #include "roborts_msgs/TwistAccel.h"
-
+#include "roborts_msgs/GameStatus.h"
 
 #include "local_planner/proto/local_planner.pb.h"
 #include "local_planner/local_planner_base.h"
@@ -140,6 +140,7 @@ class LocalPlannerNode {
   std::shared_ptr<tf::TransformListener> tf_;
   //! initialize state
   bool initialized_;
+  bool begin_;
 
   //! local planner algorithm which choose to run
   std::string selected_algorithm_;
@@ -153,6 +154,7 @@ class LocalPlannerNode {
   std::string visual_frame_;
   //! ros publisher
   ros::Publisher vel_pub_;
+  ros::Subscriber ref_sub_;
   //! When no global planner give the global plan, use local goal express robot end point
   geometry_msgs::PoseStamped local_goal_;
   //! local planner algorithm max error

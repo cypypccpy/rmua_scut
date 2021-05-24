@@ -51,6 +51,7 @@
  *********************************************************************/
 #include "static_layer_setting.pb.h"
 #include "static_layer.h"
+#include <thread>
 
 namespace roborts_costmap {
 
@@ -75,11 +76,74 @@ void StaticLayer::OnInitialize() {
   bool is_debug_ = para_static_layer.is_debug();
   map_topic_ = para_static_layer.topic_name();
   map_sub_ = nh.subscribe(map_topic_.c_str(), 1, &StaticLayer::InComingMap, this);
+  ref_sub_ = nh.subscribe("game_zone_array_status", 1, &StaticLayer::RefereeCB, this);
   ros::Rate temp_rate(10);
-  while(!map_received_) {
+  while(!map_received_ && !map_reset_) {
     ros::spinOnce();
     temp_rate.sleep();
   }
+
+  map_update_ = false;
+  while(!map_update_ && map_reset_) {
+    ros::spinOnce();
+  }
+  if (map_reset_) {
+    ROS_INFO("add prohibition area!");
+
+    unsigned int temp_index = 0;
+    unsigned char value = 100;
+    float resolution_x = 8.72;
+    float resulution_y = 8.91;
+
+    for (auto i = 0; i < height_; i++) {
+      for (auto j = 0; j < width_; j++) {
+        if (j < int((530 + 540) / resolution_x) && j > int(530 / resolution_x) && i > int(2850 / resulution_y) && i < int((2850 + 480) / resulution_y)) {
+          if (prohibition_[0] == 1) 
+            costmap_[temp_index] = InterpretValue(value);
+          else
+            costmap_[temp_index] = InterpretValue(0);
+        }
+
+        if (j < int((1930 + 540) / resolution_x) && j > int(1930 / resolution_x) && i > int(1710 / resulution_y) && i < int((1710 + 480) / resulution_y)) {
+          if (prohibition_[1] == 1) 
+            costmap_[temp_index] = InterpretValue(value);
+          else
+            costmap_[temp_index] = InterpretValue(0);
+        }
+
+        if (j < int((4070 + 540) / resolution_x) && j > int(4070 / resolution_x) && i > int(4095 / resulution_y) && i < int((4095 + 480) / resulution_y)) {
+          if (prohibition_[2] == 1) 
+            costmap_[temp_index] = InterpretValue(value);
+          else
+            costmap_[temp_index] = InterpretValue(0);
+        }
+
+        if (j < int((4070 + 540) / resolution_x) && j > int(4070 / resolution_x) && i > int(505 / resulution_y) && i < int((505 + 480) / resulution_y)) {
+          if (prohibition_[3] == 1) 
+            costmap_[temp_index] = InterpretValue(value);
+          else
+            costmap_[temp_index] = InterpretValue(0);
+        }
+
+        if (j < int((6210 + 540) / resolution_x) && j > int(6210 / resolution_x) && i > int(2890 / resulution_y) && i < int((2890 + 480) / resulution_y)) {
+          if (prohibition_[4] == 1) 
+            costmap_[temp_index] = InterpretValue(value);
+          else
+            costmap_[temp_index] = InterpretValue(0);
+        }
+
+        if (j < int((7610 + 540) / resolution_x) && j > int(7610 / resolution_x) && i > int(1750 / resulution_y) && i < int((1750 + 480) / resulution_y)) {
+          if (prohibition_[5] == 1) 
+            costmap_[temp_index] = InterpretValue(value);
+          else
+            costmap_[temp_index] = InterpretValue(0);
+        }
+
+        ++temp_index;
+      }
+    }
+  }
+  
   staic_layer_x_ = staic_layer_y_ = 0;
   width_ = size_x_;
   height_ = size_y_;
@@ -98,6 +162,7 @@ void StaticLayer::MatchSize() {
 void StaticLayer::InComingMap(const nav_msgs::OccupancyGridConstPtr &new_map) {
   unsigned int temp_index = 0;
   unsigned char value = 0;
+
   unsigned int size_x = new_map->info.width, size_y = new_map->info.height;
   auto resolution = new_map->info.resolution;
   auto origin_x = new_map->info.origin.position.x;
@@ -110,7 +175,8 @@ void StaticLayer::InComingMap(const nav_msgs::OccupancyGridConstPtr &new_map) {
   } else if(size_x_ != size_x || size_y_ != size_y || resolution_ != resolution || origin_x_ != origin_x || origin_y_ != origin_y) {
     ResizeMap(size_x, size_y, resolution, origin_x, origin_y);
   }
-
+  //std::cout << size_x << std::endl;
+  //std::cout << size_y << std::endl;
   for (auto i = 0; i < size_y; i++) {
     for (auto j = 0; j < size_x; j++) {
       value = new_map->data[temp_index];
@@ -127,6 +193,10 @@ void StaticLayer::InComingMap(const nav_msgs::OccupancyGridConstPtr &new_map) {
   if (first_map_only_) {
     map_sub_.shutdown();
   }
+}
+
+void IncomingUpdate(const map_msgs::OccupancyGridUpdateConstPtr& update) {
+  ROS_INFO("123");
 }
 
 unsigned char StaticLayer::InterpretValue(unsigned char value) {
@@ -158,6 +228,9 @@ void StaticLayer::Reset() {
   if(first_map_only_) {
     has_updated_data_ = true;
   } else {
+    map_reset_ = true;
+    map_update_ = false;
+    
     OnInitialize();
   }
 }
@@ -223,6 +296,23 @@ void StaticLayer::UpdateCosts(Costmap2D& master_grid, int min_i, int min_j, int 
       }
     }
   }
+}
+
+void StaticLayer::RefereeCB(const roborts_msgs::GameZoneArray::ConstPtr &zone) {
+  zone_ = *zone;
+  unsigned char prohibition_red_[4] = {2, 1, 5, 4};
+  //std::cout << zone_.zone[0].type << std::endl;
+  //std::cout << prohibition_red_[0] << std::endl;
+
+  for (int i = 0; i < 6; i++) {
+    if (zone_.zone[i].type == prohibition_red_[0] || zone_.zone[i].type == prohibition_red_[1] 
+     || zone_.zone[i].type == prohibition_red_[2] || zone_.zone[i].type == prohibition_red_[3]) {
+      prohibition_[i] = 1;
+    }
+    else 
+      prohibition_[i] = 0;
+  }
+  map_update_ = true;
 }
 
 } //namespace roborts_costmap

@@ -314,6 +314,7 @@ void CostmapInterface::ResetLayers() {
   Costmap2D *master = layered_costmap_->GetCostMap();
   master->ResetPartMap(0, 0, master->GetSizeXCell(), master->GetSizeYCell());
   auto plugins = layered_costmap_->GetPlugins();
+  
   for (auto plugin = (*plugins).begin(); plugin != (*plugins).end(); ++plugin) {
     (*plugin)->Reset();
   }

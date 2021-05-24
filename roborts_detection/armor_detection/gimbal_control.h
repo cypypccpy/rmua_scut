@@ -51,7 +51,7 @@ class GimbalContrl
    */
   float GetPitch(float x,float y,float v);
 
-  float GyroOptimizer(float angle_);
+  float GimbalOptimizer(float angle_);
 
  public:
   /**
@@ -69,7 +69,7 @@ class GimbalContrl
    * @param pitch Input and output actual pitch angle
    * @param yaw Input and output actual yaw angle
    */
-  void Transform(cv::Point3f &postion,float &pitch,float &yaw);
+  void Transform(cv::Point3f &postion, float &pitch, float &yaw);
   void Predict(float &pitch_rate, float &yaw_rate, float &pitch, float &yaw);
 
  private:

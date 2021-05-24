@@ -19,7 +19,7 @@
 
 namespace roborts_base{
 Chassis::Chassis(std::shared_ptr<roborts_sdk::Handle> handle):
-    Module(handle){
+    Module(handle), begin_(false){
   SDK_Init();
   ROS_Init();
 }
@@ -77,6 +77,7 @@ void Chassis::ROS_Init(){
   //ros subscriber
   ros_sub_cmd_chassis_vel_ = ros_nh_.subscribe("cmd_vel", 1, &Chassis::ChassisSpeedCtrlCallback, this);
   ros_sub_cmd_chassis_vel_acc_ = ros_nh_.subscribe("cmd_vel_acc", 1, &Chassis::ChassisSpeedAccCtrlCallback, this);
+  ref_sub_ = ros_nh_.subscribe<roborts_msgs::GameStatus>("/game_status", 1, &Chassis::RefereeCB, this);
 
 
   //ros_message_init
@@ -88,6 +89,14 @@ void Chassis::ROS_Init(){
 
   uwb_data_.header.frame_id = "uwb";
 }
+
+void Chassis::RefereeCB(const roborts_msgs::GameStatus::ConstPtr &status) {
+  status_ = *status;
+  if (status_.game_status == 4) {
+    begin_ = true;
+  }
+}
+
 void Chassis::ChassisInfoCallback(const std::shared_ptr<roborts_sdk::cmd_chassis_info> chassis_info){
 
   ros::Time current_time = ros::Time::now();
@@ -129,7 +138,9 @@ void Chassis::ChassisSpeedCtrlCallback(const geometry_msgs::Twist::ConstPtr &vel
   chassis_speed.vw = vel->angular.z * 1800.0 / M_PI;
   chassis_speed.rotate_x_offset = 0;
   chassis_speed.rotate_y_offset = 0;
-  chassis_speed_pub_->Publish(chassis_speed);
+  if (begin_) {
+    chassis_speed_pub_->Publish(chassis_speed);
+  }
 }
 
 void Chassis::ChassisSpeedAccCtrlCallback(const roborts_msgs::TwistAccel::ConstPtr &vel_acc){
@@ -142,6 +153,8 @@ void Chassis::ChassisSpeedAccCtrlCallback(const roborts_msgs::TwistAccel::ConstP
   chassis_spd_acc.wz = vel_acc->accel.angular.z * 1800.0 / M_PI;
   chassis_spd_acc.rotate_x_offset = 0;
   chassis_spd_acc.rotate_y_offset = 0;
-  chassis_spd_acc_pub_->Publish(chassis_spd_acc);
+  if (begin_) {
+    chassis_spd_acc_pub_->Publish(chassis_spd_acc);
+  }
 }
 }

@@ -53,6 +53,7 @@ class Gimbal: public Module {
    * @param gimbal_info Gimbal information
    */
   void GimbalInfoCallback(const std::shared_ptr<roborts_sdk::cmd_gimbal_info> gimbal_info);
+  void RefereeCB(const roborts_msgs::GameStatus::ConstPtr &status);
   /**
    * @brief Gimbal angle control callback in ROS
    * @param msg Gimbal angle control data
@@ -97,6 +98,8 @@ class Gimbal: public Module {
   ros::NodeHandle    ros_nh_;
   //! ros subscriber for gimbal angle control
   ros::Subscriber    ros_sub_cmd_gimbal_angle_;
+  ros::Subscriber    ref_sub_;
+
   ros::Publisher     gimbal_info_pub_;
   //! ros service server for friction wheel control
   ros::ServiceServer ros_ctrl_fric_wheel_srv_;
@@ -104,6 +107,9 @@ class Gimbal: public Module {
   ros::ServiceServer ros_ctrl_shoot_srv_;
   //! ros gimbal tf
   geometry_msgs::TransformStamped gimbal_tf_;
+  roborts_msgs::GameStatus status_;
+  bool begin_;
+  
   //! ros gimbal tf broadcaster
   tf::TransformBroadcaster        tf_broadcaster_;
 

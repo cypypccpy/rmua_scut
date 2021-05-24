@@ -85,7 +85,7 @@ void ConstraintSet::LoadParam() {
   }
 }
 
-ErrorInfo ConstraintSet::DetectArmor(bool &detected, cv::Point3f &target_3d) {
+ErrorInfo ConstraintSet::DetectArmor(bool &detected, cv::Point3f &target_3d, cv::Mat &rvec, cv::Mat &tvec) {
   std::vector<cv::RotatedRect> lights;
   std::vector<ArmorInfo> armors;
 
@@ -151,7 +151,7 @@ ErrorInfo ConstraintSet::DetectArmor(bool &detected, cv::Point3f &target_3d) {
       //CalcControlInfoCorrect(final_armor, armor_points_c);
 
       cv_toolbox_->DrawRotatedRect(src_img_, final_armor.rect, cv::Scalar(0, 255, 0), 2);
-      CalcControlInfo(final_armor, target_3d);
+      CalcControlInfo(final_armor, target_3d, rvec, tvec);
       /*
       if(mode == 0 && delay < 90){
         delay += 1;
@@ -266,7 +266,6 @@ void ConstraintSet::DetectLights(const cv::Mat &src, std::vector<cv::RotatedRect
   //std::vector<int> is_processes(contours_light.size());
   for (unsigned int i = 0; i < contours_brightness.size(); ++i) {
     for (unsigned int j = 0; j < contours_light.size(); ++j) {
-
         if (cv::pointPolygonTest(contours_light[j], contours_brightness[i][0], false) >= 0.0) {
           cv::RotatedRect single_light = cv::minAreaRect(contours_brightness[i]);
           cv::Point2f vertices_point[4];
@@ -276,6 +275,12 @@ void ConstraintSet::DetectLights(const cv::Mat &src, std::vector<cv::RotatedRect
           if (enable_debug_)
             cv_toolbox_->DrawRotatedRect(show_lights_before_filter_, single_light, cv::Scalar(0, 255, 0), 2, light_info.angle_);
           //single_light.angle = light_info.angle_;
+          if (single_light.angle == -0) {
+            single_light.angle = -single_light.angle;
+          }
+          if (single_light.angle < 0) {
+            single_light.angle = single_light.angle + 90;
+          }
           lights.push_back(single_light);
           break;
         }
@@ -310,9 +315,11 @@ void ConstraintSet::FilterLights(std::vector<cv::RotatedRect> &lights) {
     }
     
     if (enable_debug_) {
-      std::cout << "light angle: " << angle << std::endl;
-      std::cout << "light.size.width: " << light.size.width << std::endl;
+      std::cout << "light angle: " << light.angle << std::endl;
+      std::cout << "light.size.width: " << (float)light.size.width << std::endl;
       std::cout << "light.size.height: " << light.size.height << std::endl;
+      std::cout << "light.center.x: " << (float)light.center.x << std::endl;
+      std::cout << "light.center.y: " << (float)light.center.y << std::endl;
       std::cout << "light_aspect_ratio: " << light_aspect_ratio << std::endl;
       std::cout << "light_area: " << light.size.area() << std::endl;
     }
@@ -471,14 +478,19 @@ void ConstraintSet::FilterArmors(std::vector<ArmorInfo> &armors) {
 }
 
 ArmorInfo ConstraintSet::SlectFinalArmor(std::vector<ArmorInfo> &armors) {
+  /*
   std::sort(armors.begin(),
             armors.end(),
             [](const ArmorInfo &p1, const ArmorInfo &p2) { return p1.rect.size.area() > p2.rect.size.area(); });
+  */
+  std::sort(armors.begin(),
+            armors.end(),
+            [](const ArmorInfo &p1, const ArmorInfo &p2) { return p1.rect.center.y < p2.rect.center.y; });
 
   return armors[0];
 }
 
-void ConstraintSet::CalcControlInfo(const ArmorInfo & armor, cv::Point3f &target_3d) {
+void ConstraintSet::CalcControlInfo(const ArmorInfo & armor, cv::Point3f &target_3d, cv::Mat &rvec_, cv::Mat &tvec_) {
   cv::Mat rvec;
   cv::Mat tvec;
   cv::solvePnP(armor_points_,
@@ -487,7 +499,9 @@ void ConstraintSet::CalcControlInfo(const ArmorInfo & armor, cv::Point3f &target
                distortion_coeffs_,
                rvec,
                tvec);
+  tvec_ = tvec;
   target_3d = cv::Point3f(tvec);
+  rvec_ = rvec;
 }
 
 void ConstraintSet::CalcControlInfoCorrect(const ArmorInfo & armor, std::vector<cv::Point2f> &armor_points_c) {

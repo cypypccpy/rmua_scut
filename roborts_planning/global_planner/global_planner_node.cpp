@@ -89,7 +89,8 @@ ErrorInfo GlobalPlannerNode::Init() {
 void GlobalPlannerNode::GoalCallback(const roborts_msgs::GlobalPlannerGoal::ConstPtr &msg) {
 
   ROS_INFO("Received a Goal from client!");
-
+  costmap_ptr_->ResetLayers();
+  
   //Update current error and info
   ErrorInfo error_info = GetErrorInfo();
   NodeState node_state = GetNodeState();
