@@ -27,10 +27,13 @@
 #include "roborts_msgs/GameZoneArray.h"
 #include "roborts_msgs/GameStatus.h"
 #include "roborts_msgs/GameRobotBullet.h"
+#include "roborts_msgs/RobotDamage.h"
 
 #include "io/io.h"
 #include "../proto/decision.pb.h"
 #include "costmap/costmap_interface.h"
+#include <thread>
+#include <ros/spinner.h>
 
 namespace roborts_decision{
 
@@ -58,12 +61,11 @@ class Blackboard {
     // Enemy fake pose
     ros::NodeHandle rviz_nh("/move_base_simple");
     enemy_sub_ = rviz_nh.subscribe<geometry_msgs::PoseStamped>("goal", 1, &Blackboard::GoalCallback, this);
-
     ros::NodeHandle nh;
     game_zone_sub_ = nh.subscribe<roborts_msgs::GameZoneArray>("game_zone_array_status", 1, &Blackboard::GameZoneCallback, this);
     game_time_sub_ = nh.subscribe<roborts_msgs::GameStatus>("game_status", 1 , &Blackboard::GameStatusCallback, this);
     game_bullet_sub_ = nh.subscribe<roborts_msgs::GameRobotBullet>("game_robor_bullet", 1 , &Blackboard::GameBulletCallback, this);
-
+    robot_damage_sub_ = nh.subscribe<roborts_msgs::RobotDamage>("robot_damage", 1 , &Blackboard::RobotDamageCallback, this);
 
     roborts_decision::DecisionConfig decision_config;
     roborts_common::ReadProtoFromTextFile(proto_file_path_, &decision_config);
@@ -80,11 +82,21 @@ class Blackboard {
                                                  actionlib::SimpleActionClient<roborts_msgs::ArmorDetectionAction>::SimpleActiveCallback(),
                                                  boost::bind(&Blackboard::ArmorDetectionFeedbackCallback, this, _1));
     }
-
-
   }
 
   ~Blackboard() = default;
+
+  void RobotDamageCallback(const roborts_msgs::RobotDamageConstPtr& damage) {
+    damage_ = *damage;
+    damage_received_ = true;
+  }
+
+  roborts_msgs::RobotDamage GetDamage() const {
+    while(!damage_received_) {
+      ros::spinOnce();
+    }
+    return damage_;
+  }
 
   void GameBulletCallback(const roborts_msgs::GameRobotBulletConstPtr& bullet) {
     bullet_ = *bullet;
@@ -150,10 +162,8 @@ class Blackboard {
   }
 
   bool GetZone() const {
-    ros::Rate rate(0.5);
     while (!zone_received_) {
       ROS_INFO("wait for receive game zone");
-      rate.sleep();
       ros::spinOnce();
     }
     return zone_received_;
@@ -306,6 +316,7 @@ class Blackboard {
   ros::Subscriber game_zone_sub_;
   ros::Subscriber game_time_sub_;
   ros::Subscriber game_bullet_sub_;
+  ros::Subscriber robot_damage_sub_;
 
   float blue_bullet_buff_x, blue_bullet_buff_y, red_bullet_buff_x, red_bullet_buff_y = 0;
   int remaining_time_;
@@ -321,11 +332,13 @@ class Blackboard {
   roborts_msgs::GameZoneArray zone_;
   roborts_msgs::GameStatus status_;
   roborts_msgs::GameRobotBullet bullet_;
+  roborts_msgs::RobotDamage damage_;
   geometry_msgs::PoseStamped enemy_pose_;
   bool enemy_detected_;
   bool zone_received_ = false;
   bool time_received_ = false;
   bool bullet_received_ = false;
+  bool damage_received_ = false;
   bool begin_ = false;
 
   //! cost map

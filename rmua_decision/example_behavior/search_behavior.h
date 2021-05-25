@@ -223,7 +223,7 @@ class SearchBehavior {
 
         auto quaternion = tf::createQuaternionMsgFromRollPitchYaw(decision_config.search_region_2(i).roll(),
                                                                   decision_config.search_region_2(i).pitch(),
-                                                                  1.57 + decision_config.search_region_2(i).yaw());
+                                                                  decision_config.search_region_2(i).yaw());
         search_point.pose.orientation = quaternion;
         search_region_2_.push_back(search_point);
       }

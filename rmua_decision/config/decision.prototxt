@@ -12,6 +12,16 @@ blue_wing_bot {
     pitch: 0
     yaw:   1.57 
   }
+
+  stand_position {
+    x: 1.5 # 8.20
+    y: 1.5 # 4.69
+    z: 0
+
+    roll:  0
+    pitch: 0
+    yaw:   1.57
+  }
 }
 
 blue_master_bot {
@@ -23,6 +33,16 @@ blue_master_bot {
     roll:  0
     pitch: 0
     yaw:   -1.57 
+  }
+
+  stand_position {
+    x: 7.55 # 8.20
+    y: 0.74 # 4.69
+    z: 0
+
+    roll:  0
+    pitch: 0
+    yaw:   3.14
   }
 }
 
@@ -36,6 +56,16 @@ red_wing_bot {
     pitch: 0
     yaw:   1.57
   }
+
+  stand_position {
+    x: 7.55 # 8.20
+    y: 0.74 # 4.69
+    z: 0
+
+    roll:  0
+    pitch: 0
+    yaw:   3.14
+  }
 }
 
 red_master_bot {
@@ -48,9 +78,19 @@ red_master_bot {
     pitch: 0
     yaw:   -1.57
   }
+
+  stand_position {
+    x: 7.48 # 8.20
+    y: 3.91 # 4.69
+    z: 0
+
+    roll:  0
+    pitch: 0
+    yaw:   3.14
+  }
 }
 
-# icra2019 map
+
 point {
   x: 6.14
   y: 4.45
@@ -167,17 +207,17 @@ wing_bot_task_point {
 }
 
 search_region_1 {
-  x: 0.72
-  y: 1.0
+  x: 0.8
+  y: 1.5
   z: 0
 
   roll:  0
   pitch: 0
-  yaw:   2.36
+  yaw:   0.78
 }
 
 search_region_2 {
-  x: 5.35
+  x: 5.35  #useless
   y: 0.8
   z: 0
 
@@ -187,13 +227,13 @@ search_region_2 {
 }
 
 search_region_2 {
-  x: 7.40
+  x: 7.20
   y: 3.30
   z: 0
 
   roll:  0
   pitch: 0
-  yaw:   0.78
+  yaw:   3.92
 }
 
 search_region_3 {

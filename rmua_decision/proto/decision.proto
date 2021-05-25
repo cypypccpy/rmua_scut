@@ -34,6 +34,7 @@ message WhirlVel {
 
 message MultiRobot {
   optional Point start_position = 7;
+  optional Point stand_position = 8;
 }
 
 message DecisionConfig {

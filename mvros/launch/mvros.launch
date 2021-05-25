@@ -1,0 +1,7 @@
+<launch>
+    <node name="mvros" pkg="mvros" type="mvros">
+        <param name="ExposureTime" type="int" value="300" />
+        <param name="CameraParam" type="str" value="package://mvros/config/CameraParam.yaml" />
+    </node>
+</launch>
+

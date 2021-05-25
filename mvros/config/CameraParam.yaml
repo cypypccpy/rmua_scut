@@ -1,0 +1,23 @@
+image_width: 640
+image_height: 480
+camera_name: mindvision
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [ 7.0813676240115308e+02, 0., 3.2618547752479543e+02, 0.,
+       7.0794396482446996e+02, 2.3627246970507082e+02, 0., 0., 1. ]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [ -5.0098736499935015e-01, 3.0994074447387521e-01,
+       -1.1522716720207144e-04, 1.5116598492470734e-05, 0. ]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [ 7.0813676240115308e+02, 0., 3.2618547752479543e+02, 0., 0.,
+       7.0794396482446996e+02, 2.3627246970507082e+02, 0., 0., 0., 1., 0.]

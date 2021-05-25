@@ -45,5 +45,7 @@
 
   <!-- Run the decision Node -->
   <!--node pkg="roborts_decision" type="decision_node" name="decision_node" respawn="true"/-->
+  <node pkg="rmua_decision" type="behavior_test_node" name="behavior_test_node" respawn="true" output="screen"/>
+
 </launch>
 
