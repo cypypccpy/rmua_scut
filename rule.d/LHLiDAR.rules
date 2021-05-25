@@ -1,0 +1,3 @@
+KERNEL=="ttyUSB0", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", ATTRS{serial}=="0000:00:14.0", MODE:="0777", SYMLINK+="LHLiDAR"
+KERNEL=="ttyUSB0", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="0000:00:14.0", MODE:="0770", SYMLINK+="LHLiDAR"
+

@@ -33,7 +33,6 @@
 #include "../proto/decision.pb.h"
 #include "costmap/costmap_interface.h"
 #include <thread>
-#include <ros/spinner.h>
 
 namespace roborts_decision{
 

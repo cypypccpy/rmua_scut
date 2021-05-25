@@ -78,17 +78,15 @@ void StaticLayer::OnInitialize() {
   map_sub_ = nh.subscribe(map_topic_.c_str(), 1, &StaticLayer::InComingMap, this);
   ref_sub_ = nh.subscribe("game_zone_array_status", 1, &StaticLayer::RefereeCB, this);
   ros::Rate temp_rate(10);
-  ros::AsyncSpinner spinner(2);
+  //ros::AsyncSpinner spinner(2);
   while(!map_received_ && !map_reset_) {
-    spinner.start();
+    ros::spinOnce();
   }
-  spinner.stop();
-
+  temp_rate.sleep();
   map_update_ = false;
   while(!map_update_ && map_reset_) {
-    spinner.start();
+    ros::spinOnce();
   }
-  spinner.stop();
 
   if (map_reset_) {
     ROS_INFO("add prohibition area!");
