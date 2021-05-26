@@ -8,6 +8,7 @@
 #include "../behavior_tree/behavior_state.h"
 #include "../proto/decision.pb.h"
 
+#include "tf/transform_datatypes.h"
 #include "line_iterator.h"
 
 namespace roborts_decision {
@@ -44,7 +45,7 @@ class SearchBehavior {
     auto executor_state = Update();
 
     if (executor_state != BehaviorState::RUNNING) {
-      auto robot_map_pose = blackboard_->GetRobotMapPose();
+      auto robot_map_pose_ = blackboard_->GetRobotMapPose();
 
       if (search_count_ == 3) {
         this->SetBeginPosition();
@@ -91,6 +92,30 @@ class SearchBehavior {
       ROS_INFO("search_region_4_");
     }
     search_count_--;
+  }
+
+  void IfGetDamage() {
+    roborts_msgs::RobotDamage damage_ = blackboard_->GetDamage();
+    auto robot_map_pose_ = blackboard_->GetRobotMapPose();
+    tf::Quaternion quat;
+    tf::quaternionMsgToTF(robot_map_pose_.pose.orientation, quat);
+
+    double roll, pitch, yaw;
+    tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
+    if (damage_ .damage_source == 1) {
+      yaw += 1.57;
+    }
+    if (damage_ .damage_source == 3) {
+      yaw -= 1.57;
+    }
+    
+    geometry_msgs::PoseStamped last_position;
+    auto quaternion = tf::createQuaternionMsgFromRollPitchYaw(roll, pitch, yaw);
+    last_position.pose.position=robot_map_pose_.pose.position;
+    last_position.pose.orientation = quaternion;
+  
+    chassis_executor_->Execute(last_position);
+
   }
 
   void IfGetBullet() {
