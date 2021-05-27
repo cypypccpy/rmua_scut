@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 {
   carposition cp;
   CLIENT serv;
-  serv.clientinit("127.1.1.1", 8888);
+  serv.clientinit("192.168.1.103", 8888);
   while (1)
   {
     serv.clientreceive();

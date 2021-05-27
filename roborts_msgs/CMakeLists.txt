@@ -56,6 +56,9 @@ add_message_files(
 	RobotHeat.msg
 	RobotDamage.msg
 	RobotShoot.msg
+	ProjectileSupply.msg
+	SupplierStatus.msg
+	BonusStatus.msg
 )
 
 add_service_files(
