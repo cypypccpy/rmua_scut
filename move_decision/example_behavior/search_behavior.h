@@ -10,7 +10,7 @@
 
 #include "line_iterator.h"
 
-namespace move_decision {
+namespace roborts_decision {
 class SearchBehavior {
  public:
   SearchBehavior(ChassisExecutor* &chassis_executor,

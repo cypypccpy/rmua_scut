@@ -8,7 +8,7 @@
 #include "../behavior_tree/behavior_state.h"
 #include <geometry_msgs/PoseStamped.h>
 
-namespace  move_decision{
+namespace  roborts_decision{
 class BulletBehavior{
  public:
     BulletBehavior(ChassisExecutor* &chassis_executor, 
@@ -60,7 +60,7 @@ class BulletBehavior{
     }
 
     bool LoadParam(const std::string &proto_file_path) {
-        move_decision::DecisionConfig decision_config;
+        roborts_decision::DecisionConfig decision_config;
         if (!roborts_common::ReadProtoFromTextFile(proto_file_path, &decision_config)) {
             return false;
         }
@@ -78,7 +78,7 @@ class BulletBehavior{
 
     ~BulletBehavior() = default;
  private:
-    move_decision::DecisionConfig decision_config;
+    roborts_decision::DecisionConfig decision_config;
     ChassisExecutor* const chassis_executor_;
     Blackboard* const blackboard_;
     geometry_msgs::PoseStamped bullet_position_;

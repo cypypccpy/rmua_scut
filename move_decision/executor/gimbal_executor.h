@@ -6,7 +6,7 @@
 #include "roborts_msgs/GimbalRate.h"
 
 #include "../behavior_tree/behavior_state.h"
-namespace move_decision{
+namespace roborts_decision{
 /***
  * @brief Gimbal Executor to execute different abstracted task for gimbal module
  */

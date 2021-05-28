@@ -55,5 +55,6 @@ message DecisionConfig {
     repeated Point search_region_3 = 15;
     repeated Point search_region_4 = 16;
     optional bool blue = 17 [default = true];
+    optional bool search = 18 [default = true];
 }
 

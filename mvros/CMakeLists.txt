@@ -29,7 +29,7 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 include_directories(include ${OpenCV_INCLUDE_DIRS})
-add_executable(mvros /mvros/src/main.cpp)
+add_executable(mvros src/main.cpp)
 TARGET_LINK_LIBRARIES(mvros libopencv_calib3d.so libopencv_core.so
 libopencv_features2d.so libopencv_flann.so libopencv_highgui.so libopencv_imgproc.so libopencv_ml.so libopencv_objdetect.so libopencv_photo.so libopencv_video.so libopencv_videostab.so libMVSDK.so)
 target_link_libraries(mvros ${catkin_LIBRARIES})

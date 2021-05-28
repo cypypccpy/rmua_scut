@@ -43,9 +43,9 @@ class SearchBehavior {
   void Run() {
 
     auto executor_state = Update();
-
+    auto robot_map_pose_ = blackboard_->GetRobotMapPose();
+    
     if (executor_state != BehaviorState::RUNNING) {
-      auto robot_map_pose_ = blackboard_->GetRobotMapPose();
 
       if (search_count_ == 3) {
         this->SetBeginPosition();
@@ -65,7 +65,6 @@ class SearchBehavior {
     }
   }
 
-
   void Cancel() {
     chassis_executor_->Cancel();
   }
@@ -75,6 +74,7 @@ class SearchBehavior {
   }
 
   void SetBeginPosition() {
+    ROS_INFO("Set begin position");
     if (decision_config.master() && decision_config.blue()) {
       search_region_ = search_region_1_;
       ROS_INFO("search_region_1_");
@@ -95,6 +95,7 @@ class SearchBehavior {
   }
 
   void IfGetDamage() {
+    ROS_INFO("IfGetDamage");
     roborts_msgs::RobotDamage damage_ = blackboard_->GetDamage();
     auto robot_map_pose_ = blackboard_->GetRobotMapPose();
     tf::Quaternion quat;
@@ -119,6 +120,7 @@ class SearchBehavior {
   }
 
   void IfGetBullet() {
+    ROS_INFO("IfGetBullet");
     time_ = blackboard_->GetTime();
     if (!decision_config.master()) {
       if (time_ < buff_change_time_) {
@@ -134,6 +136,7 @@ class SearchBehavior {
   }
   
   void IfHide() {
+    ROS_INFO("IfHide");
     if (decision_config.blue()) {
       roborts_msgs::GameRobotBullet blue_bullet_ = blackboard_->GetBullet();
       if (decision_config.master() && blue_bullet_.blue1 == 0) {

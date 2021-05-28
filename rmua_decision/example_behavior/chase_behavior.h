@@ -43,14 +43,57 @@ class ChaseBehavior {
 
     auto robot_map_pose = blackboard_->GetRobotMapPose();
     if (executor_state != BehaviorState::RUNNING) {
+      standed_ = false;
       if (!standed_) 
-        this->Stand();
-      else 
-        this->Chase(robot_map_pose);
+        //this->Stand();
+        ROS_INFO("standed!");
+      else {
+        //this->ChaseWithCamera(robot_map_pose);
+        this->ChaseWithRadar(robot_map_pose);
+      }
     }
   }
 
-  void Chase(const geometry_msgs::PoseStamped robot_map_pose) {
+  void ChaseWithRadar(const geometry_msgs::PoseStamped robot_map_pose) {
+    if (decision_config.blue()) {
+      roborts_msgs::CarCoordinate red_coord = blackboard_->GetEnemyPose();
+
+      geometry_msgs::PoseStamped enemy_goal;
+      enemy_goal.header.frame_id = "map";
+      enemy_goal.header.stamp = ros::Time::now();
+      enemy_goal.pose.position.x = red_coord.red1x;
+      enemy_goal.pose.position.y = red_coord.red1y;
+
+      //filter
+      if (!chase_init_) 
+        this->SetGoal(enemy_goal);
+
+      if (chase_init_ && blackboard_ ->GetDistance(chase_goal_, enemy_goal) > 0) {
+        this->SetGoal(enemy_goal);
+
+        auto robot_x = robot_map_pose.pose.position.x;
+        auto robot_y = robot_map_pose.pose.position.y;
+        unsigned int robot_cell_x, robot_cell_y;
+        double goal_x, goal_y;
+        blackboard_->GetCostMap2D()->World2Map(robot_x,
+                                              robot_y,
+                                              robot_cell_x,
+                                              robot_cell_y);
+
+          bool find_goal = false;
+          for(FastLineIterator line(  red_coord.red1x, red_coord.red1x, robot_cell_x, robot_cell_x); line.IsValid(); line.Advance()) {
+
+            auto point_cost = blackboard_->GetCostMap2D()->GetCost((unsigned int) (line.GetX()), (unsigned int) (line.GetY())); //current point's cost
+
+            if(point_cost >= 253)
+              continue;
+            chassis_executor_->Execute(enemy_goal);
+          }
+      }
+    }
+  }
+
+  void ChaseWithCamera(const geometry_msgs::PoseStamped robot_map_pose) {
     chase_buffer_[chase_count_++ % 2] = blackboard_->GetEnemy();
     chase_count_ = chase_count_ % 2;
 
@@ -244,6 +287,7 @@ class ChaseBehavior {
   //! cancel flag
   bool cancel_goal_;
   bool standed_ = false;
+  bool chase_init_ = false;
 };
 }
 

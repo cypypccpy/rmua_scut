@@ -16,14 +16,14 @@
 #include "../proto/decision.pb.h"
 #include "costmap/costmap_interface.h"
 
-namespace move_decision{
+namespace roborts_decision{
 
 class Blackboard {
  public:
   typedef std::shared_ptr<Blackboard> Ptr;
   typedef roborts_costmap::CostmapInterface CostMap;
   typedef roborts_costmap::Costmap2D CostMap2D;
-  const std::string &proto_file_path_ = "/home/rumascut/rmua_scut/src/move_decision/config/decision.prototxt";
+  const std::string &proto_file_path_ = "/home/rumascut/rmua_scut/src/roborts_decision/config/decision.prototxt";
   explicit Blackboard(const std::string &proto_file_path_):
       enemy_detected_(false),
       armor_detection_actionlib_client_("armor_detection_node_action", true){
@@ -97,6 +97,9 @@ class Blackboard {
     robot_damage_ = *robot_damage;
     if (robot_damage_.damage_source == 2) {
       backattacked_ = true;
+    }
+    else if (robot_damage_.damage_source == 1 || robot_damage_.damage_source = 3) {
+      
     }
   }
   bool GetBackArmorAttackedStatus() const {

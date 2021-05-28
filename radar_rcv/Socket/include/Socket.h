@@ -15,10 +15,10 @@ using namespace std;
 using namespace cv;
 struct carposition
 {
-    Point blue1 = Point(0.0, 0.0);
-    Point blue2 = Point(0.0, 0.0);
-    Point red1 = Point(0.0, 0.0);
-    Point red2 = Point(0.0, 0.0);
+    Point2d blue1 = Point(0.0, 0.0);
+    Point2d blue2 = Point(0.0, 0.0);
+    Point2d red1 = Point(0.0, 0.0);
+    Point2d red2 = Point(0.0, 0.0);
 };
 
 class SERVICE

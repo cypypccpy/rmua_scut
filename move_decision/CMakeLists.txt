@@ -34,7 +34,7 @@ rrts_protobuf_generate_cpp(${CMAKE_CURRENT_SOURCE_DIR}/proto
 
 catkin_package()
 
-add_executable(move_node
+add_executable(behavior_test
   ${DecisionProtoHds}
   ${DecisionProtoSrc}
   example_behavior/bullet_behavior.h
@@ -42,16 +42,16 @@ add_executable(move_node
   example_behavior/chase_behavior.h
   example_behavior/patrol_behavior.h
   example_behavior/search_behavior.h
-  move_node.cpp
+  behavior_test.cpp
   executor/chassis_executor.cpp
   executor/gimbal_executor.cpp
   )
 
-target_link_libraries(move_node
+target_link_libraries(behavior_test
   PRIVATE
   roborts_costmap
   ${catkin_LIBRARIES}
   ${PROTOBUF_LIBRARIES}
   )
-add_dependencies(move_node
+add_dependencies(behavior_test
   roborts_msgs_generate_messages)

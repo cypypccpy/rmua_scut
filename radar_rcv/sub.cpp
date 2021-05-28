@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 #include <iostream>
 #include "Socket/include/Socket.h"
 #include <ros/ros.h>
-//#include "radar/CarCoordinate.h"
+#include "roborts_msgs/CarCoordinate.h"
 using namespace std;
 
 //RegParam param = RegParam();
@@ -30,9 +30,24 @@ int main(int argc, char *argv[])
 {
   carposition cp;
   CLIENT serv;
-  serv.clientinit("192.168.1.103", 8888);
-  while (1)
+  ros::init(argc, argv, "radar_rcv");
+  ros::NodeHandle ros_nh_;
+  ros::Publisher pub_ = ros_nh_.advertise<roborts_msgs::CarCoordinate>("carcoordinate", 1);
+  roborts_msgs::CarCoordinate coord_;
+
+  serv.clientinit("192.168.1.105", 9002);
+  while (ros::ok())
   {
     serv.clientreceive();
+    coord_.blue1x = static_cast<double>(serv.result.blue1.x);
+    coord_.blue1y = static_cast<double>(serv.result.blue1.y);
+    coord_.blue2x = static_cast<double>(serv.result.blue2.x);
+    coord_.blue2y = static_cast<double>(serv.result.blue2.y);
+    coord_.red1x = static_cast<double>(serv.result.red1.x);
+    coord_.red1y = static_cast<double>(serv.result.red1.y);
+    coord_.red2x = static_cast<double>(serv.result.red2.x);
+    coord_.red2y = static_cast<double>(serv.result.red2.y);
+    pub_.publish(coord_);
+
   }
 }

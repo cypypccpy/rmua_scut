@@ -1,7 +1,7 @@
 #ifndef MOVE_DECISION_DIRECTION_BEHAVIOR_H
 #define MOVE_DECISION_DIRECTION_BEHAVIOR_H
 
-namespace  move_decision{
+namespace  roborts_decision{
 class DirectionBehavior{
  public:
     DirectionBehavior(ChassisExecutor* &chassis_executor, 
@@ -28,10 +28,11 @@ class DirectionBehavior{
         auto executor_state = Update();
         auto robot_map_pose_ = blackboard_->GetRobotMapPose();
         if (executor_state != BehaviorState::RUNNING) {
-            if (direction_status = false) {
+            if (direction_status = false && blackboard_->GetBackArmorAttackedStatus() = true) {
                 chassis_executor_->Execute(direction_position_);
                 direction_status = true;
             }
+            else if 
         }     
     }
     void Cancel() {
@@ -44,7 +45,7 @@ class DirectionBehavior{
     }
 
     bool LoadParam(const std::string &proto_file_path) {
-        move_decision::DecisionConfig decision_config;
+        roborts_decision::DecisionConfig decision_config;
         if (!roborts_common::ReadProtoFromTextFile(proto_file_path, &decision_config)) {
             return false;
         }
@@ -61,7 +62,7 @@ class DirectionBehavior{
 
     ~BulletBehavior() = default;
  private:
-    move_decision::DecisionConfig decision_config;
+    roborts_decision::DecisionConfig decision_config;
     ChassisExecutor* const chassis_executor_;
     Blackboard* const blackboard_;
     geometry_msgs::PoseStamped direction_position_;

@@ -75,7 +75,7 @@ void VelConverter::resultCB(const roborts_msgs::GlobalPlannerActionResult::Const
 }
 
 void VelConverter::UpdateVel() {
-  if (!begin_) {
+  if (begin_) {
     cmd_vel_acc_.twist.linear.x = 0;
     cmd_vel_acc_.twist.linear.y = 0;
 

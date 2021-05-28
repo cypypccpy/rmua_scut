@@ -2,8 +2,8 @@
 // Created by autocar on 18-12-21.
 //
 
-#ifndef ROBORTS_DECISION_BEHAVIOR_STATE_H
-#define ROBORTS_DECISION_BEHAVIOR_STATE_H
+#ifndef MOVE_DECISION_BEHAVIOR_STATE_H
+#define MOVE_DECISION_BEHAVIOR_STATE_H
 namespace roborts_decision {
 /**
  * @brief Behavior state

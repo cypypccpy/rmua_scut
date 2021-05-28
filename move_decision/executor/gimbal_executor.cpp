@@ -1,5 +1,5 @@
 #include "gimbal_executor.h"
-namespace move_decision{
+namespace roborts_decision{
 GimbalExecutor::GimbalExecutor():excution_mode_(ExcutionMode::IDLE_MODE),
                                  execution_state_(BehaviorState::IDLE){
   ros::NodeHandle nh;

@@ -18,9 +18,7 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg message_generation)
-add_message_files(DIRECTORY msg FILES CarCoordinate.msg)
-generate_messages(DEPENDENCIES std_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg roborts_msgs)
 catkin_package(CATKIN_DEPENDS message_runtime)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -39,7 +37,10 @@ aux_source_directory(. DIR_SRCS)
 add_subdirectory(Socket)
 
 add_executable(sub sub.cpp)
+
 target_link_libraries(sub ${catkin_LIBRARIES})
 target_link_libraries(sub ${OpenCV_LIBS})
 target_link_libraries(sub Socket)
 
+add_dependencies(sub
+  roborts_msgs_generate_messages)

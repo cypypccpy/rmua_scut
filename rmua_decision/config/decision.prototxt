@@ -1,11 +1,34 @@
-simulate: false
-master: false
+simulate: true
+master: true
 blue: true
+search: true
 
 blue_wing_bot {
   start_position {
-    x: 0.65 # 8.20
-    y: 3.95 # 4.69
+    x: 0.755 # 8.20
+    y: 3.951 # 4.69
+    z: 0
+
+    roll:  0
+    pitch: 0
+    yaw:   0
+  }
+
+  stand_position {
+    x: 2.274 # 8.20
+    y: 3.951 # 4.69
+    z: 0
+
+    roll:  0
+    pitch: 0
+    yaw:   -0.78
+  }
+}
+
+blue_master_bot {
+  start_position {
+    x: 0.755 # 8.20
+    y: 0.738 # 4.69
     z: 0
 
     roll:  0
@@ -14,64 +37,42 @@ blue_wing_bot {
   }
 
   stand_position {
-    x: 1.5 # 8.20
-    y: 1.5 # 4.69
+    x: 2.274 # 8.20
+    y: 0.738 # 4.69
     z: 0
 
     roll:  0
     pitch: 0
-    yaw:   1.57
-  }
-}
-
-blue_master_bot {
-  start_position {
-    x: 0.72 # 8.20
-    y: 0.78 # 4.69
-    z: 0
-
-    roll:  0
-    pitch: 0
-    yaw:   -1.57 
-  }
-
-  stand_position {
-    x: 7.55 # 8.20
-    y: 0.74 # 4.69
-    z: 0
-
-    roll:  0
-    pitch: 0
-    yaw:   3.14
+    yaw:   0.78
   }
 }
 
 red_wing_bot {
   start_position {
-    x: 7.55 # 8.20
-    y: 0.74 # 4.69
-    z: 0
-
-    roll:  0
-    pitch: 0
-    yaw:   1.57
-  }
-
-  stand_position {
-    x: 7.55 # 8.20
-    y: 0.74 # 4.69
+    x: 7.474 # 8.20
+    y: 0.738 # 4.69
     z: 0
 
     roll:  0
     pitch: 0
     yaw:   3.14
   }
+
+  stand_position {
+    x: 5.925 # 8.20
+    y: 0.738 # 4.69
+    z: 0
+
+    roll:  0
+    pitch: 0
+    yaw:   2.36
+  }
 }
 
 red_master_bot {
   start_position {
-    x: 7.48 # 8.20
-    y: 3.91 # 4.69
+    x: 7.474 # 8.20
+    y: 3.951 # 4.69
     z: 0
 
     roll:  0
@@ -80,13 +81,13 @@ red_master_bot {
   }
 
   stand_position {
-    x: 7.48 # 8.20
-    y: 3.91 # 4.69
+    x: 5.925 # 8.20
+    y: 3.951 # 4.69
     z: 0
 
     roll:  0
     pitch: 0
-    yaw:   3.14
+    yaw:   3.92
   }
 }
 
@@ -207,18 +208,18 @@ wing_bot_task_point {
 }
 
 search_region_1 {
-  x: 0.8
-  y: 1.5
+  x: 0.755
+  y: 1.200
   z: 0
 
   roll:  0
   pitch: 0
-  yaw:   0.78
+  yaw:   0.39
 }
 
 search_region_2 {
-  x: 5.35  #useless
-  y: 0.8
+  x: 0  #useless
+  y: 0
   z: 0
 
   roll:  0
@@ -227,42 +228,42 @@ search_region_2 {
 }
 
 search_region_2 {
-  x: 7.20
-  y: 3.30
+  x: 7.474
+  y: 3.489
   z: 0
 
   roll:  0
   pitch: 0
-  yaw:   3.92
+  yaw:   3.53
 }
 
 search_region_3 {
-  x: 3.05
-  y: 4.56
+  x: 7.474
+  y: 3.489
   z: 0
 
   roll:  0
   pitch: 0
-  yaw:   3.14
+  yaw:   3.53
 }
 
 
 search_region_4 {
-  x: 5.55
-  y: 2.93
-  z: 0
-
-  roll:  0
-  pitch: 0
-  yaw:   1.57
-}
-
-search_region_4 {
-  x: 6.14
-  y: 4.34
+  x: 0
+  y: 0
   z: 0
 
   roll:  0
   pitch: 0
   yaw:   0
+}
+
+search_region_4 {
+  x: 0.755
+  y: 1.200
+  z: 0
+
+  roll:  0
+  pitch: 0
+  yaw:   0.39
 }

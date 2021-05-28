@@ -41,6 +41,7 @@ add_message_files(
   DodgeMode.msg
   GimbalInfo.msg
   BallCollision.msg
+  CarCoordinate.msg
 )
 
 add_message_files(

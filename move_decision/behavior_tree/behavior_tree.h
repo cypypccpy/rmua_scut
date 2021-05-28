@@ -15,8 +15,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef ROBORTS_DECISION_BEHAVIOR_TREE_H
-#define ROBORTS_DECISION_BEHAVIOR_TREE_H
+#ifndef MOVE_DECISION_BEHAVIOR_TREE_H
+#define MOVE_DECISION_BEHAVIOR_TREE_H
 
 #include <chrono>
 

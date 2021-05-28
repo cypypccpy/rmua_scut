@@ -9,7 +9,7 @@
 #include "../behavior_tree/behavior_state.h"
 
 
-namespace move_decision {
+namespace roborts_decision {
 class GoalBehavior {
  public:
   GoalBehavior(ChassisExecutor* &chassis_executor,

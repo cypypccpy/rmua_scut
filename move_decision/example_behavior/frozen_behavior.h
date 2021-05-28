@@ -7,7 +7,7 @@
 #include "../behavior_tree/behavior_state.h"
 #include "../proto/decision.pb.h"
 #include "line_iterator.h"
-namespace move_decision{
+namespace roborts_decision{
 class FrozenBehavior{
     public:
         FrozenBehavior(ChassisExecutor* &chassis_executor, 

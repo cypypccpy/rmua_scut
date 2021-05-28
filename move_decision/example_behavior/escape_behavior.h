@@ -11,7 +11,7 @@
 
 #include "line_iterator.h"
 
-namespace move_decision{
+namespace roborts_decision{
 class EscapeBehavior {
  public:
   EscapeBehavior(ChassisExecutor* &chassis_executor,

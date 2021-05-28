@@ -26,22 +26,22 @@ enum BehaviorStateEnum{
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "move_node");
-    std::string full_path = ros::package::getPath("move_decision") + "/config/decision.prototxt";
-    auto chassis_executor = new move_decision::ChassisExecutor;
-    auto gimbal_executor = new move_decision::GimbalExecutor;
-    auto blackboard = new move_decision::Blackboard(full_path);
+    std::string full_path = ros::package::getPath("roborts_decision") + "/config/decision.prototxt";
+    auto chassis_executor = new roborts_decision::ChassisExecutor;
+    auto gimbal_executor = new roborts_decision::GimbalExecutor;
+    auto blackboard = new roborts_decision::Blackboard(full_path);
     
     BehaviorStateEnum last_state, cur_state;
     last_state = BehaviorStateEnum::INIT;
     cur_state = BehaviorStateEnum::INIT;
 
-    move_decision::FrozenBehavior frozen_behavior(chassis_executor, blackboard, full_path);
-    move_decision::SearchBehavior search_behavior(chassis_executor, blackboard, full_path);
-    move_decision::BulletBehavior bullet_behavior(chassis_executor, blackboard, full_path);
-    move_decison::BloodBehavior blood_behavior(chassis_executor, blacboard, full_path);
-    move_decision::DirectionBehavior direction_behavior(chassis_executor, blackboard, full_path);
-    move_decision::GoalBehavior goal_behavior(chassis_executor, blackboard, full_path);
-    move_decision::EscapeBehavior escape_behavior(chassis_executor,blackboard, full_path);
+    roborts_decision::FrozenBehavior frozen_behavior(chassis_executor, blackboard, full_path);
+    roborts_decision::SearchBehavior search_behavior(chassis_executor, blackboard, full_path);
+    roborts_decision::BulletBehavior bullet_behavior(chassis_executor, blackboard, full_path);
+    roborts_decision::BloodBehavior blood_behavior(chassis_executor, blacboard, full_path);
+    roborts_decision::DirectionBehavior direction_behavior(chassis_executor, blackboard, full_path);
+    roborts_decision::GoalBehavior goal_behavior(chassis_executor, blackboard, full_path);
+    roborts_decision::EscapeBehavior escape_behavior(chassis_executor,blackboard, full_path);
     ros::Rate rate(10);
 
 
