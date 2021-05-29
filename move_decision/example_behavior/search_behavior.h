@@ -20,15 +20,15 @@ class SearchBehavior {
                                                        proto_file_path_(proto_file_path) {
 
 
-    last_position_.header.frame_id = "map";
-    last_position_.pose.orientation.x = 0;
-    last_position_.pose.orientation.y = 0;
-    last_position_.pose.orientation.z = 0;
-    last_position_.pose.orientation.w = 1;
+    search_position_.header.frame_id = "map";
+    search_position_.pose.orientation.x = 0;
+    search_position_.pose.orientation.y = 0;
+    search_position_.pose.orientation.z = 0;
+    search_position_.pose.orientation.w = 1;
 
-    last_position_.pose.position.x = 0;
-    last_position_.pose.position.y = 0;
-    last_position_.pose.position.z = 0;
+    search_position_.pose.position.x = 0;
+    search_position_.pose.position.y = 0;
+    search_position_.pose.position.z = 0;
 
     search_index_ = 0;
     search_count_ = 0;
@@ -276,7 +276,7 @@ class SearchBehavior {
     }
   }
   void SetLastPosition(geometry_msgs::PoseStamped last_position) {
-    last_position_ = last_position;
+    search_position_ = last_position;
     search_count_ = 3;
   }
 
@@ -292,7 +292,7 @@ class SearchBehavior {
   const std::string & proto_file_path_;
 
   //! chase goal
-  geometry_msgs::PoseStamped last_position_;
+  geometry_msgs::PoseStamped search_position_;
 
   //! search buffer
   std::vector<geometry_msgs::PoseStamped> search_region_1_;

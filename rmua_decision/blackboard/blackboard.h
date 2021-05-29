@@ -68,6 +68,7 @@ class Blackboard {
     robot_damage_sub_ = nh.subscribe<roborts_msgs::RobotDamage>("robot_damage", 1 , &Blackboard::RobotDamageCallback, this);
     enemy_pose_sub_ = nh.subscribe<roborts_msgs::CarCoordinate>("carcoordinate", 1 , &Blackboard::EnemyPoseCallback, this);
 
+
     roborts_decision::DecisionConfig decision_config;
     roborts_common::ReadProtoFromTextFile(proto_file_path_, &decision_config);
 

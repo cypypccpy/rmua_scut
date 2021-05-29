@@ -19,6 +19,7 @@ class DirectionBehavior{
         direction_position_.pose.position.y = 0;
         direction_position_.pose.position.z = 0;
         
+        
         if (!LoadParam(proto_file_path)){
             ROS_ERROR("%s can't open file",__FUNCTION__);
         }
@@ -28,11 +29,15 @@ class DirectionBehavior{
         auto executor_state = Update();
         auto robot_map_pose_ = blackboard_->GetRobotMapPose();
         if (executor_state != BehaviorState::RUNNING) {
-            if (direction_status = false && blackboard_->GetBackArmorAttackedStatus() = true) {
+            if (direction_status = false && blackboard_->GetBackArmorAttackedStatus()) {
                 chassis_executor_->Execute(direction_position_);
                 direction_status = true;
             }
-            else if 
+            else if (direction_status = false && blackboard_->GetSideArmorAttackedStatus()) {
+                chassis_executor_->Execute(direction_position_);
+                direction_status = true;
+            }
+            
         }     
     }
     void Cancel() {
@@ -49,14 +54,25 @@ class DirectionBehavior{
         if (!roborts_common::ReadProtoFromTextFile(proto_file_path, &decision_config)) {
             return false;
         }
-        direction_position_.header.frame_id = "map";
-        direction_position_.pose.position.x = blackboard_->GetRobotMapPose().x();
-        direction_position_.pose.position.y = blackboard_->GetRobotMapPose().y(); 
-        direction_position_.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(
-                                                                                                                        blackboard_->GetRobotMapPose().roll(), 
-                                                                                                                        blackboard_->GetRobotMapPose().pitch(), 
-                                                                                                                        blackboard_->GetRobotMapPose().yaw() + 3.14);
-        
+        if (blackboard_->GetBackArmorAttackedStatus()){
+            direction_position_.header.frame_id = "map";
+            direction_position_.pose.position.x = blackboard_->GetRobotMapPose().x();
+            direction_position_.pose.position.y = blackboard_->GetRobotMapPose().y(); 
+            direction_position_.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(
+                                                blackboard_->GetRobotMapPose().roll(), 
+                                                blackboard_->GetRobotMapPose().pitch(), 
+                                                blackboard_->GetRobotMapPose().yaw() + 3.14);
+        }
+        else if (blackboard_) {
+            direction_position_.header.frame_id = "map";
+            direction_position_.pose.position.x = blackboard_->GetRobotMapPose().x();
+            direction_position_.pose.position.y = blackboard_->GetRobotMapPose().y(); 
+            direction_position_.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(
+                                                blackboard_->GetRobotMapPose().roll(), 
+                                                blackboard_->GetRobotMapPose().pitch(), 
+                                                blackboard_->GetRobotMapPose().yaw() + 1.57);
+        }
+
         return true;
     }
 

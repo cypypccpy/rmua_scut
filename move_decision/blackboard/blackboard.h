@@ -95,15 +95,37 @@ class Blackboard {
 
   void GameDamageCallback(const roborts_msgs::RobotDamageConstPtr& robot_damage) {
     robot_damage_ = *robot_damage;
-    if (robot_damage_.damage_source == 2) {
+    switch (robot_damage_.damage_source)
+    {
+    case 0:
+      frontattacked_ = true;
+    case 1:
+      rightattacked_ = true;
+    case 2:
       backattacked_ = true;
+    case 3:
+      leftattacked_ = true;
+      break;
+    default:
+      break;
     }
-    else if (robot_damage_.damage_source == 1 || robot_damage_.damage_source = 3) {
-      
+    if (frontattacked_ && backattacked_) {
+      bothattacked_ = true;
+    }
+    if (leftattacked_ || rightattacked_) {
+      sideattacked_ = true;
     }
   }
   bool GetBackArmorAttackedStatus() const {
     return backattacked_;
+  }
+
+  bool GetSideArmorAttackedStatus() const {
+    return sideattacked_;
+  }
+
+  bool GetBothArmorAttackedStatus() const {
+    return bothattacked_;
   }
 
   void GameStatusCallback(const roborts_msgs::GameStatusConstPtr& status) {
@@ -140,6 +162,8 @@ class Blackboard {
     
     unsigned char blue_bullet = 3;
     unsigned char red_bullet = 4;
+    unsigned char blue_blood = 6;
+    unsigned char red_blood = 1;
     float buff_point[12] = {(530 + 270) / resolution_x, (2850 + 240) / resolution_y, (1930 + 270) / resolution_x, (1710 + 240) / resolution_y,
                               (4070 + 270) / resolution_x, (4095 + 240) / resolution_y, (4070 + 270) / resolution_x, (505 + 240) / resolution_y,
                               (6210 + 270) / resolution_x, (2890 + 240) / resolution_y, (7610 + 270) / resolution_x, (1750 + 240) / resolution_y};
@@ -153,6 +177,16 @@ class Blackboard {
       if (zone_.zone[m].type == red_bullet) {
         Blackboard::red_bullet_buff_x = buff_point[0 + m*2];
         Blackboard::red_bullet_buff_y = buff_point[1 + m*2];
+      }
+
+      if (zone_.zone[m].type == blue_blood) {
+        Blackboard::blue_blood_buff_x = buff_point[0 + m*2];
+        Blackboard::blue_blood_buff_x = buff_point[1 + m*2];
+      }
+      
+      if (zone_.zone[m].type == blue_blood) {
+        Blackboard::blue_blood_buff_x = buff_point[0 + m*2];
+        Blackboard::blue_blood_buff_x = buff_point[1 + m*2];
       }
     }
     zone_received_ = true;
@@ -345,6 +379,7 @@ class Blackboard {
   ros::Subscriber game_damage_sub_;
 
   float blue_bullet_buff_x, blue_bullet_buff_y, red_bullet_buff_x, red_bullet_buff_y = 0;
+  float blue_blood_buff_x, blue_blood_buff_y, red_blood_buff_x, red_blood_buff_y = 0;
   int remaining_time_;
 
   //! Goal info
@@ -366,8 +401,14 @@ class Blackboard {
   bool time_received_ = false;
   bool bullet_received_ = false;
   bool hp_received_ = false;
+  bool hp_zone_received_ = false;
   bool begin_ = false;
+  bool frontattacked_ = false;
+  bool rightattacked_ = false;
   bool backattacked_ = false;
+  bool leftattacked_ = false;
+  bool sideattacked_ = false;
+  bool bothattacked_ = false;
 
   //! cost map
   std::shared_ptr<CostMap> costmap_ptr_;

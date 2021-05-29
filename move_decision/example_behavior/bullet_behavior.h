@@ -38,21 +38,21 @@ class BulletBehavior{
         auto dy = bullet_position_.pose.position.y - robot_map_pose_.pose.position.y;
         if (executor_state != BehaviorState::RUNNING) {
             if (bullet_status = false) {
-                chassis_executor_->Execute(direction_position_);
+                chassis_executor_->Execute(bullet_position_);
                 blackboard_->GetZone();
             }
         }
         if(std::sqrt(std::pow(dx,2) + std::pow(dy,2)) <= 0.15) {
-            direction_status = true;
+            bullet_status = true;
         }
         if (blackboard_->bullet_ != 0) {
-            direction_status = false;
+            bullet_status = false;
         }
         
     }
     void Cancel() {
         chassis_executor_->Cancel();
-        direction_status = false;
+        bullet_status = false;
     }
 
     BehaviorState Update() {

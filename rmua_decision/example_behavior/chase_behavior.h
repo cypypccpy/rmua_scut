@@ -43,10 +43,10 @@ class ChaseBehavior {
 
     auto robot_map_pose = blackboard_->GetRobotMapPose();
     if (executor_state != BehaviorState::RUNNING) {
-      standed_ = false;
-      if (!standed_) 
-        //this->Stand();
+      if (!standed_) {
+        this->Stand();
         ROS_INFO("standed!");
+      }
       else {
         //this->ChaseWithCamera(robot_map_pose);
         this->ChaseWithRadar(robot_map_pose);
@@ -61,8 +61,15 @@ class ChaseBehavior {
       geometry_msgs::PoseStamped enemy_goal;
       enemy_goal.header.frame_id = "map";
       enemy_goal.header.stamp = ros::Time::now();
-      enemy_goal.pose.position.x = red_coord.red1x;
-      enemy_goal.pose.position.y = red_coord.red1y;
+      if (red_coord.red1x != -1) {
+        enemy_goal.pose.position.x = red_coord.red1x;
+        enemy_goal.pose.position.y = red_coord.red1y;
+      }
+
+      else {
+        enemy_goal.pose.position.x = red_coord.red2x;
+        enemy_goal.pose.position.y = red_coord.red2y;
+      }
 
       //filter
       if (!chase_init_) 

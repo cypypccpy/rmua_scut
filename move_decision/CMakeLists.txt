@@ -37,11 +37,13 @@ catkin_package()
 add_executable(behavior_test
   ${DecisionProtoHds}
   ${DecisionProtoSrc}
-  example_behavior/bullet_behavior.h
-  example_behavior/back_boot_area_behavior.h
-  example_behavior/chase_behavior.h
-  example_behavior/patrol_behavior.h
+  example_behavior/frozen_behavior.h  
   example_behavior/search_behavior.h
+  example_behavior/bullet_behavior.h
+  example_behavior/blood_behavior.h
+  example_behavior/direction_behavior.h
+  example_behavior/goal_behavior.h
+  example_behavior/escape_behavior.h
   behavior_test.cpp
   executor/chassis_executor.cpp
   executor/gimbal_executor.cpp

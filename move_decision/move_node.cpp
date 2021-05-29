@@ -40,7 +40,7 @@ int main(int argc, char **argv){
     roborts_decision::BulletBehavior bullet_behavior(chassis_executor, blackboard, full_path);
     roborts_decision::BloodBehavior blood_behavior(chassis_executor, blacboard, full_path);
     roborts_decision::DirectionBehavior direction_behavior(chassis_executor, blackboard, full_path);
-    roborts_decision::GoalBehavior goal_behavior(chassis_executor, blackboard, full_path);
+    //roborts_decision::GoalBehavior goal_behavior(chassis_executor, blackboard, full_path);
     roborts_decision::EscapeBehavior escape_behavior(chassis_executor,blackboard, full_path);
     ros::Rate rate(10);
 
@@ -52,18 +52,18 @@ int main(int argc, char **argv){
             printf("Game hasn't begun. Waiting for referee system msgs...........\n");
             cur_state = BehaviorStateEnum::FROZEN;
         }
-        else if (blackboard_->begin_ = true){
+        else if (blackboard_->begin_ == true){
             if(blackboard->bullet_ == 0){
                 cur_state = BehaviorStateEnum::BULLET;
             }
             else if(blackboard_->hp_ <= 500){
                 cur_state = BehaviorStateEnum::BLOOD;
             }
-            else if (blackboard_-> hp_ >=1000 && blackboard_->backattacked_= true ){
-                cur_state = BehaviorStateEnum::DIRECTION;
-            }
-            else if (blackboard_-> hp_ <=1000 && blackboard_->backattacked_= true ){
+            else if (blackboard_->GetBothArmorAttackedStatus()){
                 cur_state = BehaviorStateEnum::ESCAPE;
+            }
+            else if (blackboard_->GetBackArmorAttackedStatus() || blackboard_->GetSideArmorAttackedStatus()){
+                cur_state = BehaviorStateEnum::DIRECTION;
             }
             else {
                 cur_state = BehaviorStateEnum::SEARCH;

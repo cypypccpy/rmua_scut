@@ -1,5 +1,5 @@
-#ifndef MOVE_DECISION_ESCAPEBEHAVIOR_H
-#define MOVE_DECISION_ESCAPEBEHAVIOR_H
+#ifndef MOVE_DECISION_ESCAPE_BEHAVIOR_H
+#define MOVE_DECISION_ESCAPE_BEHAVIOR_H
 #include <random>
 #include "io/io.h"
 #include "roborts_msgs/TwistAccel.h"
