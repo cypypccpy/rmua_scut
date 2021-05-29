@@ -16,7 +16,8 @@ class ChaseBehavior {
   ChaseBehavior(ChassisExecutor* &chassis_executor,
                 Blackboard* &blackboard,
                 const std::string & proto_file_path) : chassis_executor_(chassis_executor),
-                                                       blackboard_(blackboard) {
+                                                       blackboard_(blackboard),
+                                                       proto_file_path_(proto_file_path) {
 
 
     chase_goal_.header.frame_id = "map";
@@ -33,7 +34,7 @@ class ChaseBehavior {
     chase_count_ = 0;
 
     cancel_goal_ = true;
-    roborts_common::ReadProtoFromTextFile(proto_file_path, &decision_config);
+    roborts_common::ReadProtoFromTextFile(proto_file_path_, &decision_config);
 
   }
 
@@ -43,6 +44,18 @@ class ChaseBehavior {
 
     auto robot_map_pose = blackboard_->GetRobotMapPose();
     if (executor_state != BehaviorState::RUNNING) {
+      if (!decision_config.master() && !get_buff_)
+        this->GetBulletBuff();
+      
+      time_ = blackboard_->GetTime();
+      if (!decision_config.master()) {
+        if (time_ < buff_change_time_) {
+          blackboard_->GetZone();
+          this->GetBulletBuff();
+          buff_change_time_ -= 60;
+        }
+      }
+
       if (!standed_) {
         this->Stand();
         ROS_INFO("standed!");
@@ -50,8 +63,25 @@ class ChaseBehavior {
       else {
         //this->ChaseWithCamera(robot_map_pose);
         this->ChaseWithRadar(robot_map_pose);
+        if (delay_ = 5)
+          standed_ = false;
       }
     }
+  }
+
+  void GetBulletBuff() {
+    geometry_msgs::PoseStamped search_point;
+    search_point.header.frame_id = "map";
+    search_point.pose.position.x = blackboard_->GetZoneX(decision_config.blue());
+    search_point.pose.position.y = blackboard_->GetZoneY(decision_config.blue());
+    search_point.pose.position.z = 0.0;
+
+    auto quaternion = tf::createQuaternionMsgFromRollPitchYaw(0.0,
+                                                              0.0,
+                                                              0.0);
+    search_point.pose.orientation = quaternion;
+    get_buff_ = true;
+    chassis_executor_->Execute(search_point);
   }
 
   void ChaseWithRadar(const geometry_msgs::PoseStamped robot_map_pose) {
@@ -66,13 +96,18 @@ class ChaseBehavior {
         enemy_goal.pose.position.y = red_coord.red1y;
       }
 
-      else {
+      else if (red_coord.red2x != -1) {
         enemy_goal.pose.position.x = red_coord.red2x;
         enemy_goal.pose.position.y = red_coord.red2y;
+      }
+      else {
+        delay_ += 1;
+        return;
       }
 
       //filter
       if (!chase_init_) 
+        delay_ = 0;
         this->SetGoal(enemy_goal);
 
       if (chase_init_ && blackboard_ ->GetDistance(chase_goal_, enemy_goal) > 0) {
@@ -280,6 +315,7 @@ class ChaseBehavior {
   //! executor
   ChassisExecutor* const chassis_executor_;
   roborts_decision::DecisionConfig decision_config;
+  const std::string & proto_file_path_;
 
   //! perception information
   Blackboard* const blackboard_;
@@ -295,6 +331,10 @@ class ChaseBehavior {
   bool cancel_goal_;
   bool standed_ = false;
   bool chase_init_ = false;
+  bool get_buff_ = false;
+  int delay_ = 0;
+  int time_;
+  int buff_change_time_ = 120;
 };
 }
 

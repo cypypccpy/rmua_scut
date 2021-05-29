@@ -83,7 +83,7 @@ class MvRos
 		CameraPlay(hCamera);
 
 		CameraSetAeState(hCamera, false);
-		CameraSetExposureTime(hCamera, 700);
+		CameraSetExposureTime(hCamera, 500);
 
 		CameraSetAnalogGain(hCamera, 10);
 		CameraSetGamma(hCamera, 50);

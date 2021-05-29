@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "gimbal.h"
+#include "stdio.h"
 
 namespace roborts_base{
 Gimbal::Gimbal(std::shared_ptr<roborts_sdk::Handle> handle):
@@ -53,6 +54,8 @@ void Gimbal::SDK_Init(){
                                                           std::bind(&Gimbal::GimbalInfoCallback, this, std::placeholders::_1));
 
   gimbal_angle_pub_ = handle_->CreatePublisher<roborts_sdk::cmd_gimbal_angle>(GIMBAL_CMD_SET, CMD_SET_GIMBAL_ANGLE,
+                                                                              MANIFOLD2_ADDRESS, GIMBAL_ADDRESS);
+  gimbal_mode_pub_ = handle_->CreatePublisher<roborts_sdk::gimbal_mode_e>(GIMBAL_CMD_SET, CMD_PUSH_GIMBAL_INFO,
                                                                               MANIFOLD2_ADDRESS, GIMBAL_ADDRESS);
   //gimbal_info_pub_ = handle_->CreatePublisher<roborts_sdk::cmd_gimbal_info>(GIMBAL_CMD_SET, CMD_PUSH_GIMBAL_INFO,
   //                                                                            GIMBAL_ADDRESS, BROADCAST_ADDRESS);
@@ -125,12 +128,15 @@ void Gimbal::GimbalInfoCallback(const std::shared_ptr<roborts_sdk::cmd_gimbal_in
 void Gimbal::GimbalAngleCtrlCallback(const roborts_msgs::GimbalAngle::ConstPtr &msg){
 
   roborts_sdk::cmd_gimbal_angle gimbal_angle;
+  //roborts_sdk::gimbal_mode_e gimbal_mode;
+
   gimbal_angle.ctrl.bit.pitch_mode = msg->pitch_mode;
   gimbal_angle.ctrl.bit.yaw_mode = msg->yaw_mode;
   gimbal_angle.pitch = msg->pitch_angle*1800/M_PI;
   gimbal_angle.yaw = msg->yaw_angle*1800/M_PI;
 
   gimbal_angle_pub_->Publish(gimbal_angle);
+  //gimbal_mode_pub_->Publish(gimbal_mode);
 
 }
 

@@ -88,7 +88,7 @@ class Gimbal: public Module {
 
   //! sdk publisher for gimbal angle control
   std::shared_ptr<roborts_sdk::Publisher<roborts_sdk::cmd_gimbal_angle>>     gimbal_angle_pub_;
-  //std::shared_ptr<roborts_sdk::Publisher<roborts_sdk::cmd_gimbal_info>>      gimbal_info_pub_;
+  std::shared_ptr<roborts_sdk::Publisher<roborts_sdk::gimbal_mode_e>>      gimbal_mode_pub_;
   //! sdk publisher for frcition wheel control
   std::shared_ptr<roborts_sdk::Publisher<roborts_sdk::cmd_fric_wheel_speed>> fric_wheel_pub_;
   //! sdk publisher for gimbal shoot control

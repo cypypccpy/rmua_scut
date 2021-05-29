@@ -56,11 +56,8 @@ class SearchBehavior {
         search_index_ = (unsigned int) (search_index_% search_region_.size());
         search_count_--;
       } else if (search_count_ == 0) {
-        if (blackboard_->GetStatus()) {
-          this->IfGetBullet();
-          this->IfHide();
-        }
-        
+        this->IfGetBullet();
+        //this->IfHide();
       }
     }
   }
@@ -131,6 +128,37 @@ class SearchBehavior {
           ROS_ERROR("%s can't open file", __FUNCTION__);
         }
         buff_change_time_ -= 60;
+      }
+    }
+
+    if (decision_config.master()) {
+      if (decision_config.blue()) {
+      roborts_msgs::GameRobotHP wing_hp = blackboard_->GetRobotHP();
+        if (wing_hp.blue2 = 0) {
+          if (time_ < buff_change_time_) {
+            search_count_ = 2;
+            search_index_ = 0;
+            blackboard_->GetZone();
+            if (!LoadParam(proto_file_path_)) {
+              ROS_ERROR("%s can't open file", __FUNCTION__);
+            }
+            buff_change_time_ -= 60;
+          }
+        }
+      }
+      if (!decision_config.blue()) {
+      roborts_msgs::GameRobotHP wing_hp = blackboard_->GetRobotHP();
+        if (wing_hp.red2 = 0) {
+          if (time_ < buff_change_time_) {
+            search_count_ = 2;
+            search_index_ = 0;
+            blackboard_->GetZone();
+            if (!LoadParam(proto_file_path_)) {
+              ROS_ERROR("%s can't open file", __FUNCTION__);
+            }
+            buff_change_time_ -= 60;
+          }
+        }
       }
     }
   }

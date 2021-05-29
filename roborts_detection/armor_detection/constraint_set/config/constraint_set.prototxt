@@ -11,9 +11,9 @@ threshold {
   armor_max_stddev: 90
   armor_max_mean: 90
 
-  color_thread: 20
-  blue_thread: 100
-  red_thread: 40
+  color_thread: 60
+  blue_thread: 80
+  red_thread: 80
 }
 
 signal_recognization {

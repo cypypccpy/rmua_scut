@@ -198,12 +198,12 @@ typedef struct {
  *  session:  no ack
  */
 // Deprecated Command
-//#define CMD_SET_GIMBAL_MODE            (0X02u)
-//typedef enum: uint8_t {
-//  CODE_CONTROL,
-//  GYRO_CONTROL,
-//  G_MODE_MAX_NUM,
-//} gimbal_mode_e;
+#define CMD_SET_GIMBAL_MODE            (0X02u)
+typedef enum: uint8_t {
+  CODE_CONTROL,
+  GYRO_CONTROL,
+  G_MODE_MAX_NUM,
+} gimbal_mode_e;
 
 /*
  *  cmd_set:  GIMBAL_CMD_SET

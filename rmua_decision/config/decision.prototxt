@@ -1,5 +1,5 @@
-simulate: true
-master: true
+simulate: false
+master: false
 blue: true
 search: true
 
